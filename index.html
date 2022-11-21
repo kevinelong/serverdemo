@@ -1,0 +1,28 @@
+<body>
+  Login:
+<input id="username" placeholder="username">
+<input id="password" type="password" placeholder="password">
+<input id="login" type="button" value="Login" />
+  <a href="/register">Register</a>
+</body>
+
+<script>
+  login.addEventListener("click", e=>{
+    fetch("/login", {
+      method: "POST",
+      headers:{
+        "Content-Type" : "application/json"
+      },
+      body: JSON.stringify({
+        username: username.value,
+        password: password.value
+      })
+    })
+    .then(r=> r.json())
+    .then(r=> {
+      localStorage.username = r.data.username
+      location="/chat";
+    })
+  });
+
+  </script>

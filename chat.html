@@ -1,0 +1,38 @@
+<body>
+  <h1>
+    Chat
+  </h1>
+  <div id="messages"></div>
+  <input id="message"><button id="send">Send</button>  
+</body>
+<script>
+  function getMessages(){
+    fetch("/messages").then(r=>r.json()).then(
+      j => messages.innerHTML = j.map(m=>m.username +": "+m.message).join("<hr>") 
+    );
+  }
+  getMessages();
+
+  send.addEventListener("click", e=>{
+    
+    fetch("/messages", {
+      method: "POST",
+      headers:{
+        "Content-Type" : "application/json"
+      },
+      body: JSON.stringify({
+        username: localStorage.username,
+        message: message.value
+      })
+    }).then(r=> {
+      message.value = "";
+      getMessages(); 
+    })
+  });
+
+  function loop(){
+    getMessages();
+    setTimeout(loop, 10000);
+  }
+  loop();
+</script>
