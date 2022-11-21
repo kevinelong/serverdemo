@@ -1,0 +1,14 @@
+[
+  {
+    name: "healing potion",
+    price: 100
+  },
+  {
+    name: "fire sword",
+    price: 5000
+  },
+  {
+    name: "shield",
+    price: 2000
+  }
+]

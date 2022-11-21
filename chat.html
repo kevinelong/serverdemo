@@ -1,38 +1,86 @@
+<style>
+  #messages{
+    border:1px solid black;
+    margin: 1em;
+    height: 66vh;
+    width: 90vw;
+    overflow-x: hidden;
+    overflow-y: scroll;
+  }  
+  #bar{
+    position:absolute;
+    bottom: 1em;
+    left: 1em;
+    right: 1em;
+    display: flex;
+    justify-content: space-between;
+  }
+  #bar input{
+    display: inline-block;
+  }
+  img{
+    width: 18px;
+    width: 18px;
+  }
+</style>
 <body>
   <h1>
     Chat
   </h1>
   <div id="messages"></div>
-  <input id="message"><button id="send">Send</button>  
-</body>
+  <div id="bar">
+    <input id="message" placeholder="enter message to send"><button id="send">Send</button>  
+  </div>
+  </body>
 <script>
+  message.focus();
+
+  function messageHTML(message){
+    return `<img src="${message.image}">${message.username}: ${message.message}`;
+  }
+  
   function getMessages(){
     fetch("/messages").then(r=>r.json()).then(
-      j => messages.innerHTML = j.map(m=>m.username +": "+m.message).join("<hr>") 
+      j => {
+        messages.innerHTML = j.map(messageHTML).join("<hr>") ;
+        messages.scrollTop = messages.scrollHeight;
+      }
     );
   }
   getMessages();
 
-  send.addEventListener("click", e=>{
-    
-    fetch("/messages", {
+  function sendMessage(){
+      fetch("/messages", {
       method: "POST",
       headers:{
         "Content-Type" : "application/json"
       },
       body: JSON.stringify({
         username: localStorage.username,
-        message: message.value
+        message: message.value,
+        image: localStorage.image
       })
     }).then(r=> {
       message.value = "";
       getMessages(); 
-    })
+    });
+  }
+  
+  send.addEventListener("click", e=>{
+    sendMessage();  
   });
 
+  message.addEventListener("keyup", e=>{
+    if(e.which == 13){
+      sendMessage();
+    }    
+  });
+  
+  
   function loop(){
     getMessages();
-    setTimeout(loop, 10000);
+    setTimeout(loop, 30000);
   }
   loop();
+  
 </script>

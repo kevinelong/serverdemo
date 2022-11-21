@@ -21,7 +21,8 @@
     })
     .then(r=> r.json())
     .then(r=> {
-      localStorage.username = r.data.username
+      localStorage.username = r.data.username;
+      localStorage.image = r.data.image;
       location="/chat";
     })
   });
