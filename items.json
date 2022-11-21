@@ -1,14 +1,26 @@
 [
   {
-    name: "healing potion",
-    price: 100
+    "name": "healing potion",
+    "price": 100
   },
   {
-    name: "fire sword",
-    price: 5000
+    "name": "fire sword",
+    "price": 5000
   },
   {
-    name: "shield",
-    price: 2000
+    "name": "shield",
+    "price": 2000
+  },
+  {
+    "name": "car",
+    "price": 9000
+  },
+  {
+    "name": "house",
+    "price": 99000
+  },
+  {
+    "name": "toy",
+    "price": 100
   }
 ]
