@@ -40,7 +40,7 @@
   }
   
   function getMessages(){
-    fetch("/messages").then(r=>r.json()).then(
+    fetch("/messages").then(r=>r.json()).then( //GET /messages
       j => {
         messages.innerHTML = j.map(messageHTML).join("<hr>") ;
         messages.scrollTop = messages.scrollHeight;
@@ -50,8 +50,8 @@
   getMessages();
 
   function sendMessage(){
-      fetch("/messages", {
-      method: "POST",
+      fetch("/messages", { //POST TO /messages
+      method: "POST", //POST TO CREATE
       headers:{
         "Content-Type" : "application/json"
       },
@@ -61,8 +61,8 @@
         image: localStorage.image
       })
     }).then(r=> {
-      message.value = "";
-      getMessages(); 
+      message.value = ""; // CLEAR TEXT INPUT
+      getMessages(); //REFRESH MESSAGE LIST, SO WE SEE THE ADDED MESSAGE
     });
   }
   
@@ -71,7 +71,7 @@
   });
 
   message.addEventListener("keyup", e=>{
-    if(e.which == 13){
+    if(e.which == 13){ // 13 is the ENTER KEY
       sendMessage();
     }    
   });
@@ -79,7 +79,7 @@
   
   function loop(){
     getMessages();
-    setTimeout(loop, 30000);
+    setTimeout(loop, 30000); //CALL loop AGAIN IN 30 SECONDS
   }
   loop();
   

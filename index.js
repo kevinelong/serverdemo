@@ -1,23 +1,28 @@
-const express = require("express");
-const fs = require('fs');
-var gravatar = require('gravatar');
+const express = require("express"); //WEB SERVER AND FRAMEWORK
+const fs = require('fs'); // OS FILE SYSTEM
+var gravatar = require('gravatar'); // GLOBAL PROFILE PICTURES FOR EMAILS
 
+//LOAD STATIC DATA FROM "DATABASE" FILES
 let users = JSON.parse(fs.readFileSync('users.json'));
 let items = JSON.parse(fs.readFileSync('items.json'));
 
-const app = express();
+const app = express(); //CREATE INSTANCE OF WEB SERVER
 
 app.use(express.json({extended: true, limit: '1mb'}));
 
+//STATIC HTML TEXT FILE ROUTES MAP PATHS->FUNCTION
 app.get('/',(req, res) => res.sendfile("index.html") );
 app.get('/register',(req, res) => res.sendfile("register.html") );
 app.get('/chat',(req, res) => res.sendfile("chat.html") );
 
+//DYNAMIC ROUTE TO POST(CREATE) LOGIN SESSION
 app.post('/login',(req, res) => {
+  //FIND MATCHING USER NAME AND PASSWORD IN DATABASE
   const user = users.find(u => req.body.username === u.username && req.body.password === u.password);
   res.json( user ? {result:"success", data: user} : {result:"fail", data: req.body});
 });
 
+//REGISTER CREATE A NEW USER
 app.post('/register',(req, res) => {
   req.body.image = gravatar.url(req.body.username);
   req.body.coin = 10000;
@@ -27,15 +32,18 @@ app.post('/register',(req, res) => {
   res.json({result:"success", data: req.body});
 });
 
+// GET/READ LIST OF ALL MESSAGES
 app.get('/messages',(req, res) => {
   res.json(JSON.parse(fs.readFileSync('messages.json')))
 });
 
+// CREATE A NEW MESSAGE
 app.post('/messages',(req, res) => {
   if(req.body.message.length <= 0){
     res.json({result:"fail", data: req.body});
   }
-  
+
+  //IS THIS A SLASH COMMAND, PROCESS AS COMMAND
   if("/" == req.body.message.charAt(0)){
     let command = req.body.message.slice(1,req.body.message.length);
     let remaining = req.body.message.slice(command.indexOf(" ")+2, req.body.message.length);
@@ -63,7 +71,8 @@ app.post('/messages',(req, res) => {
       req.body.username = "SYSTEM";
     }
   }
-  
+
+  //FINALLY ACTUALLY SAVE THE MESSAGE
   let messages = JSON.parse(fs.readFileSync('messages.json'));
   messages.push(req.body);
   fs.writeFileSync('messages.json', JSON.stringify(messages));
@@ -71,6 +80,6 @@ app.post('/messages',(req, res) => {
 
 });
 
-app.listen(3000,() => {
+app.listen(3000,() => { //BEGIN LISTENING FOR INCOMING HTTP REQUESTS
   console.log("Started on PORT 3000");
 });
